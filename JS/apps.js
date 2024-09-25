@@ -123,14 +123,19 @@ function ingresarDatosIngredientes() {
             break;
     }
 
+    if (cantidad >= 1) {
+        total = calcularTotal(precio, cantidad); //precio de la compra total por unidad
+    } else {
+        total = precio; //precio de la compra total a granel
+        totalGeneral += total;
+    }
 
-    total = calcularTotal(precio, cantidad); //precio de la compra por bulto
     costoUnitario = calcularCostoUnitario(precio, unidadesDisponibles); //precio del costo unitario
 
     contadorIngredientes++;
 
     console.log({ nombre, precio, cantidad, total });
-    listadoIngredientes += '\n\ningrediente' + contadorIngredientes + ' | Nombre: ' + nombre + ' | Precio: $' + precio + ' | Cantidad: ' + cantidad + ' | Costo por unidad:' + costoUnitario + '| TOTAL: $' + total;
+    listadoIngredientes += '\n\ningrediente' + contadorIngredientes + ' | Nombre: ' + nombre + ' | Precio: $' + precio + ' | Cantidad: ' + cantidad + ' | Costo por unidad: $' + costoUnitario + ' | TOTAL: $' + total;
 }
 
 
