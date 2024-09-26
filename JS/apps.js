@@ -1,47 +1,10 @@
-/*
-const ingredientes = []
-
-const agregarIngrediente = () => {
-    const precioPorUnidad = 0;
-
-    const nombre = prompt('ingrese el nombre del ingrediente comprado').toLowerCase();
-
-    const precioDeCompra = parseFloat(prompt('ingrese el precio del bulto del producto comprado'));
-
-    const cantidadOPeso = parseFloat(prompt('Ingrese el numero de unidades o del peso que tiene el bulto'));
-
-    const medida = (prompt('Ingrese "u" o "unidad" si se trata de un bulto de unidades, "kg" o "g" para venta por granel'));
-
-
-
-    switch (medida) {
-        case 'u', 'unidad':
-            precioPorUnidad = precioDeCompra / cantidadOPeso
-            break;
-        case 'kg':
-            precioPorUnidad = precioDeCompra / ((cantidadOPeso * 1000) / 100) //suponiendo que cada 100gr es una unidad
-            break;
-        case 'g':
-            precioPorUnidad = precioDeCompra / (cantidadOPeso / 100) //suponiendo que cada 100gr es una unidad
-            break;
-    }
-}
-
-
-class Ingrediente{
-    constructor(nombre, precioDeCompra,cantidadOPeso){
-        this.nombre= nombre
-        this.precioDeCompra= precioDeCompra
-        this.medida = medidad
-    }
-}
-
-*/
-
 let totalGeneral = 0,
     contadorIngredientes = 0,
     listadoIngredientes = '\n listado de ingredientes :',
-    costoDeProductoFinal = 0;
+    costoDeProductoFinal = 0,
+    precioDeBulto = 0,
+    nombreEnLista = [];
+
 
 function solicitarDatosUsuario() {
     let nombre = prompt('Ingrese su nombre: ')
@@ -60,7 +23,7 @@ function solicitarDatosUsuario() {
 
     let mensaje;
 
-    let nombreCompleto = nombre + " " + apellido;
+    const nombreCompleto = nombre + " " + apellido;
 
     switch (genero) {
         case 'f':
@@ -95,10 +58,10 @@ function agregarIngredientes() {
 }
 
 function ingresarDatosIngredientes() {
-    let nombre, precio, cantidad, total;
+    let nombre, cantidad, precioDeBulto, medida;
 
     nombre = prompt("Ingrese nombre del ingrediente: ");
-    precio = parseFloat(prompt("Ingrese el precio del ingrediente comprado: "));
+    precioDeBulto = parseFloat(prompt("Ingrese el precio del ingrediente comprado: "));
     cantidad = parseFloat(prompt("Ingrese la cantidad del ingrediente comprado: \n"));
     medida = prompt('Segun corresponda ingrese "u" para ingrediente unitario o "kg"/"g" para ingrediente por granel').toLowerCase();
 
@@ -112,10 +75,10 @@ function ingresarDatosIngredientes() {
             unidadesDisponibles = cantidad //considerando que la compra es unitaria
             break;
         case 'kg':
-            unidadesDisponibles = (cantidad * 1000) / 50 //considerando que para el producto final unitario siempre se utilizan 50 gramos de un ingrediente. Se realiza una conversion de kilogramos a gramos.
+            unidadesDisponibles = (cantidad * 1000) / 75 //considerando que para el producto final unitario siempre se utilizan 75 gramos de un ingrediente. Se realiza una conversion de kilogramos a gramos.
             break;
         case 'g':
-            unidadesDisponibles = cantidad / 50 //considerando que para el producto final unitario siempre se utilizan 50 gramos de un ingrediente
+            unidadesDisponibles = cantidad / 75 //considerando que para el producto final unitario siempre se utilizan 75 gramos de un ingrediente.
             break;
 
         default:
@@ -123,46 +86,42 @@ function ingresarDatosIngredientes() {
             break;
     }
 
-    if (cantidad >= 1) {
-        total = calcularTotal(precio, cantidad); //precio de la compra total por unidad
-    } else {
-        total = precio; //precio de la compra total a granel
-        totalGeneral += total;
-    }
-
-    costoUnitario = calcularCostoUnitario(precio, unidadesDisponibles); //precio del costo unitario
+    costoUnitario = calcularCostoUnitario(precioDeBulto, unidadesDisponibles); //precio del costo unitario
 
     contadorIngredientes++;
+    totalGeneral += precioDeBulto;
 
-    console.log({ nombre, precio, cantidad, total });
-    listadoIngredientes += '\n\ningrediente' + contadorIngredientes + ' | Nombre: ' + nombre + ' | Precio: $' + precio + ' | Cantidad: ' + cantidad + ' | Costo por unidad: $' + costoUnitario + ' | TOTAL: $' + total;
+
+
+    listadoIngredientes += '\n\n Ingrediente nro ' + contadorIngredientes + ' | Nombre: ' + nombre + ' | Cantidad: ' + cantidad + ' | Costo por unidad: $' + costoUnitario + ' | COSTO TOTAL: $' + precioDeBulto;
+
+    console.log('La lista es: ' + nombreEnLista)
 }
 
-
-
-function calcularTotal(precio, cantidad) {
-    let total = precio * cantidad;
-    totalGeneral += total;
-    return (total);
-}
-
-function calcularCostoUnitario(precio, unidadesDisponibles) {
+function calcularCostoUnitario(precioDeBulto, unidadesDisponibles) {
     //Redondeo para abajo para evitar problemas de stock.
-    let total = Math.floor(precio / unidadesDisponibles);
+    let total = Math.floor(precioDeBulto / unidadesDisponibles);
 
     costoDeProductoFinal += total;
     return (total);
 }
 
 function mostrarInfo() {
-    listadoIngredientes += '\n\n\n El total a pagar de todos los ingredientes  es de $' + totalGeneral;
+    listadoIngredientes += '\n\n\n El total a pagar de todos los ingredientes  es de $' + totalGeneral + '\n El costo de hacer un solo producto es de $' + costoDeProductoFinal;
     alert(listadoIngredientes);
     console.log(listadoIngredientes);
     alert('El costo del producto unitario con los ingredientes seleccionados es de: $' + costoDeProductoFinal)
 
 }
 
+
+
+
+
 solicitarDatosUsuario();
-agregarIngredientes();
+
+while (confirm('Continuamos?')) {
+    agregarIngredientes();
+}
 
 
